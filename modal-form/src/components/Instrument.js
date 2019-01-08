@@ -135,7 +135,7 @@ class InteractiveGrid extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    console.log("Hi");
     return (
         <Grid container className={classes.root} spacing={16}>
             <Grid item xs={12}>
@@ -145,7 +145,7 @@ class InteractiveGrid extends React.Component {
                   alignItems='center'
                   direction='row'
                   spacing={Number('16')}>
-                {[0, 0].map(value => (
+                {this.state.instruments.map(value => (
                 <Grid key={value} item={3}>
                     <Paper className={classes.paper}>
                         <InstrumentCard className={classes.paper}/>
@@ -177,7 +177,9 @@ class InteractiveGrid extends React.Component {
             >Add an Instrument
             </DialogTitle>
             <DialogContent>
-                <MaterialUiForm onSubmit={showResults} />
+                <MaterialUiForm onSubmit={event => {{showResults(event).then( () => {
+                    this.closeModal()
+                })}}} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={this.closeModal} className={classes.modalCancel} >

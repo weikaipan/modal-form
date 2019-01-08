@@ -2,7 +2,7 @@ const validate = values => {
     const errors = {}
     const requiredFields = [
       'name',
-      // 'type',
+      'type',
       'cost',
     ]
     requiredFields.forEach(field => {
