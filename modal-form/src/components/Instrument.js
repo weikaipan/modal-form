@@ -4,25 +4,17 @@ import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button";
 import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
-import InstrumentCard from './InstrumentCard';
-import NewInstrumentForm from './NewInstrumentForm';
-import Modal from 'react-modal';
-import Toolbar from '@material-ui/core/Toolbar';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-
 import { withStyles } from '@material-ui/core/styles';
 
-const customStyles = {
-    content : {
-        top                   : '50%',
-        left                  : '50%',
-        right                 : 'auto',
-        bottom                : 'auto',
-        marginRight           : '-50%',
-        transform             : 'translate(-50%, -50%)'
-    }
-};
+import InstrumentCard from './InstrumentCard';
+import MaterialUiForm from './MaterialUiForm';
 
 const styles = theme => ({
   root: {
@@ -35,6 +27,7 @@ const styles = theme => ({
   }, 
   icon: {
     margin: theme.spacing.unit * 2,
+    color: '#01BC9E'
   },
   demo: {
     height: 240,
@@ -42,9 +35,8 @@ const styles = theme => ({
   paper: {
    height: 140,
    width: 100,
-  },
-  control: {
-    padding: theme.spacing.unit * 2,
+   margin: '10px',
+   backgroundColor: '#2837BD',
   },
   button: {
     color: '#7CEECE',
@@ -52,42 +44,83 @@ const styles = theme => ({
     width: '100%',
   },
   addPaper: {
-    backgroundColor: '#7CEECE',
+    backgroundColor: '#A4FFF0',
+    margin: '10px',
     opacity: '0.5',
     height: 140,
     width: 100
   },
   modalSave: {
-    backgroundColor: '#7CEECE',
+    backgroundColor: '#01BC9E',
     color: 'white',
+    fontFamily: 'Helvetica',
   },
   modalCancel: {
-    color: '#7CEECE',
+    color: '#01BC9E',
+    fontFamily: 'Helvetica',
   },
-  grow: {
-    flexGrow: 1,
-  },
-  topToolBar: {
-    borderBottom: '1px solid',
-  },
-  bottomToolBar: {
-    float: 'right',
-    backgroundColor: '#F5F5F5',
-  },
-  cardCollection: {
-    float: 'left',
+  dialogTitle: {
+    fontFamily: 'Helvetica',
+    fontSize: '3px',
   }
 });
+
+const DialogTitle = withStyles(theme => ({
+    root: {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      margin: 0,
+      padding: theme.spacing.unit * 2,
+    },
+    closeButton: {
+      position: 'absolute',
+      right: theme.spacing.unit,
+      top: theme.spacing.unit,
+      color: theme.palette.grey[500],
+    },
+  }))(props => {
+    const { children, classes, onClose } = props;
+    return (
+      <MuiDialogTitle disableTypography className={classes.root}>
+        <Typography variant="h6">{children}</Typography>
+        {onClose ? (
+          <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </MuiDialogTitle>
+    );
+});
+  
+const DialogContent = withStyles(theme => ({
+    root: {
+        margin: 0,
+        padding: theme.spacing.unit * 2,
+    },
+}))(MuiDialogContent);
+  
+const DialogActions = withStyles(theme => ({
+    root: {
+      borderTop: `1px solid ${theme.palette.divider}`,
+      margin: 0,
+      padding: theme.spacing.unit,
+      backgroundColor: '#F5F3F3',
+    },
+}))(MuiDialogActions);
+
+const showResults = values =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      // simulate server latency
+      window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`)
+      resolve()
+    }, 0)
+})
 
 class InteractiveGrid extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
         modalIsOpen: false,
-        direction: 'row',
-        justify: 'flex-start',
-        alignItems: 'center',
-        spacing: '16',
         instruments: [0, 0],
     };
   }
@@ -100,30 +133,22 @@ class InteractiveGrid extends React.Component {
     this.setState({ modalIsOpen: false });
   }
 
-//   addInstrument = () => {
-//       console.log("Hello");
-//     this.setState( { instruments: this.state.instruments.push(0),
-//                      modalIsOpen: false
-//                    } );
-//   }
-
   render() {
     const { classes } = this.props;
-    const { alignItems, direction, justify, spacing } = this.state;
 
     return (
         <Grid container className={classes.root} spacing={16}>
             <Grid item xs={12}>
             <Grid container 
                   className={classes.demo} 
-                  justify={justify} 
-                  alignItems={alignItems}
-                  direction={direction}
-                  spacing={Number(spacing)}>
+                  justify='flex-start' 
+                  alignItems='center'
+                  direction='row'
+                  spacing={Number('16')}>
                 {[0, 0].map(value => (
                 <Grid key={value} item={3}>
                     <Paper className={classes.paper}>
-                        <InstrumentCard />
+                        <InstrumentCard className={classes.paper}/>
                     </Paper>
                 </Grid>
                 ))}
@@ -131,7 +156,7 @@ class InteractiveGrid extends React.Component {
                     <Paper className={classes.addPaper}>
                     <Button onClick={this.openModal} className={classes.button}>
                         <Icon className={classes.icon} fontSize="large">
-                        add
+                            add
                         </Icon>
                     </Button>
                     </Paper>
@@ -139,29 +164,30 @@ class InteractiveGrid extends React.Component {
             </Grid>
             </Grid>
 
-            <Modal
-                isOpen={this.state.modalIsOpen}
-                onAfterOpen={this.afterOpenModal}
-                onRequestClose={this.closeModal}
-                style={customStyles}
-                contentLabel="Example Modal"
+            <Dialog
+                onClose={this.closeModal}
+                aria-labelledby="customized-dialog-title"
+                open={this.state.modalIsOpen}
+                fullWidth={true}
+                maxWidth = {'sm'}
             >
-                <Toolbar className={classes.topToolBar}>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        Add an Instrument
-                    </Typography>
-                    <Button onClick={this.closeModal} >
-                        <Icon className={classes.icon} fontSize="large">
-                        close
-                        </Icon>
-                    </Button>
-                </Toolbar>
-                <NewInstrumentForm />
-                <Toolbar className={classes.bottomToolBar}>
-                    <Button onClick={this.closeModal} className={classes.modalCancel} >Cancel</Button>
-                    <Button variant="outlined" type="submit" className={classes.modalSave} >Save</Button>
-                </Toolbar>
-            </Modal>
+            <DialogTitle
+                id="customized-dialog-title"
+                onClose={this.closeModal}
+            >Add an Instrument
+            </DialogTitle>
+            <DialogContent>
+                <MaterialUiForm onSubmit={showResults} />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={this.closeModal} className={classes.modalCancel} >
+                    Cancel
+                </Button>
+                <Button form="modal-form" type="submit" className={classes.modalSave} >
+                    Save
+                </Button>
+            </DialogActions>
+            </Dialog>
         </Grid>
         
     );

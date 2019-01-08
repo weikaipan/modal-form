@@ -18,6 +18,8 @@ const styles = theme => ({
   }
 });
 
+
+
 class App extends Component {
 
   render() {
@@ -34,7 +36,7 @@ class App extends Component {
       >
         <Grid item xs={10}>
         <Card>
-          <CardHeader title="Instruments" style={{ textAlign: 'left' }}/>
+          <CardHeader title="Instruments" style={{ textAlign: 'left', fontFamily: 'Helvetica' }}/>
           <InteractiveGrid />
         </Card>
         </Grid>
