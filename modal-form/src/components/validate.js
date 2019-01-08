@@ -1,3 +1,5 @@
+// Used for redux-form validation
+// set up fields that are required for submission
 const validate = values => {
     const errors = {}
     const requiredFields = [

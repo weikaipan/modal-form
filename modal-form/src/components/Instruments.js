@@ -1,3 +1,4 @@
+// Instrument cubes on the page.
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
@@ -107,16 +108,17 @@ const DialogActions = withStyles(theme => ({
     },
 }))(MuiDialogActions);
 
+// The call back after form is submitted.
+// Can be connected to server APIs.
 const showResults = values =>
   new Promise(resolve => {
     setTimeout(() => {
-      // simulate server latency
       window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`)
       resolve()
     }, 0)
 })
 
-class InteractiveGrid extends React.Component {
+class Instruments extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -196,8 +198,8 @@ class InteractiveGrid extends React.Component {
   }
 }
 
-InteractiveGrid.propTypes = {
+Instruments.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(InteractiveGrid);
+export default withStyles(styles)(Instruments);

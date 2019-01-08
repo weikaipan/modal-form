@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import InteractiveGrid from './components/Instrument';
+import Instruments from './components/Instruments';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -35,7 +35,7 @@ class App extends Component {
         <Grid item xs={10}>
         <Card>
           <CardHeader title="Instruments" style={{ textAlign: 'left', fontFamily: 'Helvetica' }}/>
-          <InteractiveGrid />
+          <Instruments />
         </Card>
         </Grid>
       </Grid>

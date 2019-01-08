@@ -1,19 +1,22 @@
+// The modal form.
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import TextField from '@material-ui/core/TextField';
 import asyncValidate from './asyncValidate';
 import validate from './validate';
+
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const instruments = [
   {
     value: 'violin',
-    label: 'violin',
+    label: 'Violin',
   },
   {
     value: 'piano',
-    label: 'piano',
+    label: 'Piano',
   },
-]
+];
 
 const renderTextField = ({
   label,
@@ -60,8 +63,8 @@ const renderSelectField = ({
   helperText,
   placeholder,
   selectProps,
-  meta: { touched, invalid, error },
   children,
+  meta: { touched, invalid, error },
   ...custom
 }) => (
   <TextField
@@ -77,22 +80,19 @@ const renderSelectField = ({
       helperText={touched && error}
       placeholder={placeholder}
       selectProps={selectProps}
-  />
+  > {children}
+  </TextField>
 )
 
 class MaterialUiForm extends React.Component {
-// const MaterialUiForm = props => {
-  constructor (props) {
-    super(props);
-    this.state = {
-      modalIsOpen: false,
-    };
-  }
 
   render () {
     const { handleSubmit, pristine, reset, submitting } = this.props
     return (
-      <form onSubmit={handleSubmit} id="modal-form">
+      <form 
+        onSubmit={event => {{ handleSubmit(event).then( () => {
+          reset()
+        })}}} id="modal-form">
         <div>
           <Field
             name="name"
@@ -111,11 +111,12 @@ class MaterialUiForm extends React.Component {
               }}
               placeholder="Type"
           >
-            {instruments.map(option => (
-            <option key={option.value} value={option.value}>
-                {option.label}
+          <option />
+          {instruments.map(option => (
+            <option value={option.value}>
+              {option.label}
             </option>
-            ))}
+          ))}
           </Field>
         </div>
         <div>
@@ -137,5 +138,5 @@ class MaterialUiForm extends React.Component {
 export default reduxForm({
   form: 'MaterialUiForm', // a unique identifier for this form
   validate,
-  asyncValidate
+  asyncValidate,
 })(MaterialUiForm)
