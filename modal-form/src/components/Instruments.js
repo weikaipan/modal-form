@@ -151,7 +151,6 @@ class Instruments extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log("Hi");
     return (
         <Grid container className={classes.root} spacing={16}>
             <Grid item xs={12}>
