@@ -116,7 +116,21 @@ const showResults = values =>
       window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`)
       resolve()
     }, 0)
-})
+    // Make API calls (send form json)
+    // const options = {
+    //   uri: 'some url',
+    //   method: 'POST',
+    //   json: values,
+    // };
+    
+    // request(options, function (error, response, body) {
+    //   if (!error && response.statusCode == 200) {
+    //      reject();
+    //   } else {
+    //      resolve();
+    //   }
+    // });
+  })
 
 class Instruments extends React.Component {
   constructor (props) {
