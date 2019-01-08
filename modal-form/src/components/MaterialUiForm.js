@@ -90,9 +90,8 @@ class MaterialUiForm extends React.Component {
     const { handleSubmit, pristine, reset, submitting } = this.props
     return (
       <form 
-        onSubmit={event => {{ handleSubmit(event).then( () => {
-          reset()
-        })}}} id="modal-form">
+        onSubmit={handleSubmit}
+        id="modal-form">
         <div>
           <Field
             name="name"
